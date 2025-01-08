@@ -53,3 +53,4 @@ The objective of this project is to automate energy meter billing, reduce queues
 ![Project Demonstration Video](https://github.com/Vedant-Jawalekar/Prepaid-Electricity-Meter/blob/main/Prepaid%20meter%20Circuit%20diagram.jpg)
 
 ## Project Report
+![Project Demonstration Video](https://github.com/Vedant-Jawalekar/Prepaid-Electricity-Meter/blob/main/PrepaidMETER%20Report.pdf)
