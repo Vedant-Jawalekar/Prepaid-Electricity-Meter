@@ -46,5 +46,5 @@ The objective of this project is to automate energy meter billing, reduce queues
    - Does the system automatically cut off power when the balance is exhausted?
    - Is the recharge process user-friendly and efficient?
 
-## Demonstration
+## Video Demonstration
 ![Project Demonstration Screenshot]( )
