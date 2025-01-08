@@ -1,0 +1,181 @@
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27,16,2);
+float units=0;
+#define relay 12
+#define echopin 2
+#define trigpin 3
+int rupee;
+float value;
+float avgcurrent;
+float actualcurrent;
+float currentvalue=0.0;
+float watt=0;
+float rupees=0; 
+long duration;
+int distance; 
+
+void setup(){
+lcd.init();
+lcd.backlight();
+lcd.clear();
+Serial.begin(9600);
+pinMode(relay, OUTPUT);
+pinMode(trigpin, OUTPUT);
+pinMode(echopin, INPUT);
+lcd.setCursor(0,0);
+lcd.print("Automatic Energy");
+lcd.setCursor(1,1);
+lcd.print("  Meter  ");
+delay(3000);
+lcd.clear();
+lcd.setCursor(0,0);
+lcd.print("Enter recharge");
+lcd.setCursor(1,1);
+lcd.print("Amount in Rupees");
+digitalWrite(relay,LOW);
+
+ Serial.print("enter recharge amount");
+    while(Serial.available()==0){}
+    rupee=Serial.parseInt();
+    rupees+=rupee;  
+    units=rupees/3;
+    Serial.print(units);
+   
+
+}
+
+void loop() {
+  
+  if(Serial.available()>0)
+  {
+    Serial.println("ad");
+    rupee=Serial.parseInt();
+    rupees+=rupee; 
+    units=rupees/3;
+    
+  }
+ 
+  
+    digitalWrite(trigpin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigpin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigpin, LOW);
+ 
+    duration=pulseIn(echopin,HIGH);
+    distance=(duration*0.034/2);
+    delay(1000);
+    if(distance>=25)
+    {
+      lcd.clear();
+      digitalWrite(relay,LOW);
+      lcd.setCursor(0,0);
+      lcd.print("Theft Alert");
+      lcd.setCursor(1,1);
+      lcd.print("dont open meter");
+      Serial.println("Theft Alert");
+      delay(1000);
+      lcd.clear();
+    }
+  
+    else{            
+    if(rupees<5)
+    { 
+      lcd.clear();
+      lcd.setCursor(1,1);
+      lcd.print("LOW Balance:");
+      Serial.print("insufficient amount");
+      digitalWrite(relay,LOW);
+      readit();
+     
+    }
+    else{
+      lcd.clear();
+      lcd.setCursor(0,0);
+    lcd.print("Balance:");
+    lcd.print(rupees);
+     lcd.setCursor(1,1);
+    lcd.print("units");
+    lcd.print(units);
+    delay(3000);
+    digitalWrite(relay,HIGH);
+    readit();
+    
+  
+    
+    Serial.print("watts consumed");
+    Serial.print(watt);
+      Serial.print("\n");
+      Serial.print("actual current");
+    Serial.print(actualcurrent);
+    delay(2000);
+    }
+     
+}
+}
+
+    void check_status()
+    {
+      if(units>5)
+      {
+        digitalWrite(relay,HIGH);
+        Serial.print("relay on");
+      }
+      if(units<3)
+      {lcd.clear();
+       lcd.setCursor(0,0);
+       lcd.print("LOW Balance ");
+       delay(200);
+      
+      }
+      if(units<1)
+     {
+      digitalWrite(relay,LOW);
+      Serial.print("relay off");
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Light Cut Due to");
+      lcd.setCursor(1,1);
+      lcd.print("Low Balance");
+      delay(2000);
+      lcd.clear();
+      lcd.print("Please Recharge ");
+      lcd.setCursor(0,1);
+      lcd.print("UR Energy Meter ");
+      delay(2000);
+     
+      
+     
+    }
+    }
+    
+
+ void readit()
+    { int x=0;
+      while(true){
+
+      x++;
+      value=analogRead(A0);
+      currentvalue=currentvalue+value;
+      delay(50);
+      avgcurrent=currentvalue/x; 
+      actualcurrent=1.3;
+     
+      watt=(watt)+(actualcurrent*220);
+      
+      if(watt>=1000)
+      {
+        units--;
+        rupees=units*3.0;
+        Serial.print(units);
+        watt=0;
+         check_status();
+      }
+     
+     
+      delay(500);
+      break;
+      }
+     
+      
+    }
