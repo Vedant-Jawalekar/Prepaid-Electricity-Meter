@@ -47,4 +47,6 @@ The objective of this project is to automate energy meter billing, reduce queues
    - Is the recharge process user-friendly and efficient?
 
 ## Video Demonstration
-![Project Demonstration Screenshot]( )
+![Project Demonstration Video](https://github.com/Vedant-Jawalekar/Prepaid-Electricity-Meter/blob/main/VID-20250108-WA0013.mp4)
+
+## Circuit Diagram
